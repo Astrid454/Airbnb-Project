@@ -2,7 +2,7 @@
 session_start();
 require 'db.php';
 
-// Verificăm dacă userul este guest autentificat
+// if guest
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'guest') {
     header("Location: login.php");
     exit;
@@ -10,7 +10,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'guest') {
 
 $user_id = $_SESSION['user_id'];
 
-// Preluăm rezervările guest-ului, împreună cu detalii despre listing
 $sql = "
     SELECT b.booking_id, b.start_date, b.end_date, b.total_price,
            l.title, l.location, l.price_per_night
@@ -122,3 +121,4 @@ $result = $stmt->get_result();
 $stmt->close();
 $conn->close();
 ?>
+
