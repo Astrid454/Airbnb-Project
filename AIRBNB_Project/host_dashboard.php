@@ -85,8 +85,9 @@ if ($_SESSION['user_type'] !== 'host') {
   <h3>Acțiuni rapide</h3>
   <a href="listings.php" class="btn btn-purple">Adaugă anunțuri</a>
   <a href="host_bookings.php" class="btn btn-purple">Vezi rezervări</a>
-  <a href="host_reviews.php" class="btn btn-purple">Vezi review-uri</a> <!-- Buton nou -->
+  <a href="host_reviews.php" class="btn btn-purple">Vezi review-uri</a> 
 </div>
 
 </body>
 </html>
+
