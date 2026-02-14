@@ -9,14 +9,13 @@ if ($_SESSION['user_type'] !== 'host') {
 
 $host_id = $_SESSION['user_id'];
 
-// Adăugare listing
+// add listings
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
     $desc = $_POST['description'];
     $price = $_POST['price'];
     $loc = $_POST['location'];
 
-    // Găsim listing_id maxim existent
     $resMax = $conn->query("SELECT MAX(listing_id) AS max_id FROM Listings");
     $rowMax = $resMax->fetch_assoc();
     $next_listing_id = $rowMax['max_id'] + 1;
@@ -72,3 +71,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 </body>
 </html>
+
