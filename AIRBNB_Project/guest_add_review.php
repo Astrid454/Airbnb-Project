@@ -10,25 +10,21 @@ if ($_SESSION['user_type'] !== 'guest') {
 $guest_id = $_SESSION['user_id'];
 $message = "";
 
-// Procesare trimitere review
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $booking_id = $_POST['booking_id'];
     $rating = $_POST['rating'];
     $comment = $_POST['comment'];
 
-    // Verificăm dacă booking-ul aparține guest-ului
     $stmt = $conn->prepare("SELECT booking_id FROM Bookings WHERE booking_id = ? AND guest_id = ?");
     $stmt->bind_param("ii", $booking_id, $guest_id);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows === 1) {
-        // Obținem ultimul review_id și incrementăm manual
         $resultMax = $conn->query("SELECT MAX(review_id) AS max_id FROM Reviews");
         $rowMax = $resultMax->fetch_assoc();
         $next_id = $rowMax['max_id'] ? $rowMax['max_id'] + 1 : 1;
 
-        // Inserăm review-ul cu review_id manual
         $stmt = $conn->prepare("INSERT INTO Reviews (review_id, booking_id, rating, comment, created_at) VALUES (?, ?, ?, ?, NOW())");
         $stmt->bind_param("iiis", $next_id, $booking_id, $rating, $comment);
         if ($stmt->execute()) {
@@ -50,12 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
     body {
-      background-color: #f8f0fc; /* mov foarte deschis */
-      color: #4b2a65; /* mov închis pentru text */
+      background-color: #f8f0fc; /* light purple*/
+      color: #4b2a65; /* dark purple */
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     h2 {
-      color: #6f42c1; /* mov vibrant */
+      color: #6f42c1; /* purple */
       text-align: center;
       margin-bottom: 2rem;
       font-weight: 700;
@@ -124,7 +120,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <select class="form-select" id="booking_id" name="booking_id" required>
         <option value="" selected disabled>Alege rezervarea</option>
         <?php
-        // Preluăm toate rezervările guest-ului, indiferent dacă au review sau nu
         $stmt = $conn->prepare("
           SELECT b.booking_id, l.title, b.start_date, b.end_date 
           FROM Bookings b
@@ -173,3 +168,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </body>
 </html>
+
