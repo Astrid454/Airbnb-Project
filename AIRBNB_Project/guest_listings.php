@@ -2,13 +2,13 @@
 session_start();
 require 'db.php';
 
-// Verificăm dacă userul este guest autentificat
+// if guest
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'guest') {
     header("Location: login.php");
     exit;
 }
 
-// Preluăm listările din baza de date
+// take listings
 $sql = "SELECT listing_id, title, description, price_per_night, location FROM listings";
 $result = $conn->query($sql);
 ?>
@@ -76,3 +76,4 @@ $result = $conn->query($sql);
     ?>
 </body>
 </html>
+
