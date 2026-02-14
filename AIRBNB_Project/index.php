@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Airbnb - Bine ai venit!</title>
   <style>
-    /* Reset simplu */
     * {
       margin: 0;
       padding: 0;
@@ -97,8 +96,6 @@
     <a href="login.html" class="btn btn-login">Log In</a>
     <a href="signup.html" class="btn btn-signup">Sign Up</a>
   </main>
-  <footer>
-    &copy; 2025 Airbnb România. Toate drepturile rezervate.
-  </footer>
 </body>
 </html>
+
