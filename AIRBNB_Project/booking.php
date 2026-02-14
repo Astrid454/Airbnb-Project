@@ -2,12 +2,10 @@
 session_start();
 require 'db.php';
 
-// Inițializăm variabilele pentru siguranță
 $error = '';
 $success = '';
 $listing = null;
 
-// Verificăm dacă userul este guest autentificat
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'guest') {
     header("Location: login.php");
     exit;
@@ -15,14 +13,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'guest') {
 
 $user_id = $_SESSION['user_id'];
 
-// Verificăm dacă există listing_id în URL
 if (!isset($_GET['listing_id'])) {
     die("ID-ul anunțului nu a fost specificat.");
 }
 
 $listing_id = intval($_GET['listing_id']);
 
-// Preluăm detalii despre listing
 $stmt = $conn->prepare("SELECT title, description, price_per_night, location FROM listings WHERE listing_id = ?");
 $stmt->bind_param("i", $listing_id);
 $stmt->execute();
@@ -34,30 +30,25 @@ if ($result->num_rows === 0) {
 
 $listing = $result->fetch_assoc();
 
-// Procesăm formularul de rezervare
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $start_date = $_POST['start_date'] ?? '';
     $end_date = $_POST['end_date'] ?? '';
 
-    // Validări simple date
     if (!$start_date || !$end_date) {
         $error = "Completează ambele date.";
     } elseif ($start_date >= $end_date) {
         $error = "Data de început trebuie să fie înaintea datei de sfârșit.";
     } else {
-        // Calculăm numărul de nopți
+        
         $diff = strtotime($end_date) - strtotime($start_date);
         $nights = $diff / (60 * 60 * 24);
 
-        // Calculăm prețul total
         $total_price = $nights * $listing['price_per_night'];
 
-        // Găsim booking_id maxim existent
         $res = $conn->query("SELECT MAX(booking_id) AS max_id FROM bookings");
         $row = $res->fetch_assoc();
         $next_booking_id = $row['max_id'] + 1;
 
-        // Inserăm rezervarea în baza de date cu booking_id manual
         $stmt2 = $conn->prepare("INSERT INTO bookings (booking_id, listing_id, guest_id, start_date, end_date, total_price) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt2->bind_param("iiissd", $next_booking_id, $listing_id, $user_id, $start_date, $end_date, $total_price);
 
@@ -163,3 +154,4 @@ $conn->close();
     </div>
 </body>
 </html>
+
